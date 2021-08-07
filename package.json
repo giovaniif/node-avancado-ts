@@ -4,7 +4,13 @@
   "main": "index.js",
   "author": "Giovani Farias <riccog.25@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "build": "rimraf dist && tsc"
+  },
   "devDependencies": {
     "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "rimraf": "^3.0.2"
   }
 }
