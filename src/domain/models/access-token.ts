@@ -1,3 +1,3 @@
-export type AccessToken = {
-  acessToken: string
+export class AccessToken {
+  constructor (private readonly value: string) {}
 }
