@@ -7,11 +7,11 @@
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "lint": "eslint .",
-    "lint:fix": "yarn lint --fix",
+    "lint:fix": "npm lint --fix",
     "test": "jest --passWithNoTests --no-cache --runInBand",
-    "test:watch": "yarn test --watch",
-    "test:coverage": "yarn test --coverage",
-    "test:staged": "yarn test --findRelatedTests",
+    "test:watch": "npm test --watch",
+    "test:coverage": "npm test --coverage",
+    "test:staged": "npm test --findRelatedTests",
     "prepare": "husky install"
   },
   "devDependencies": {
