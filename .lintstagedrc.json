@@ -1,6 +1,6 @@
 {
   "*.ts": [
-    "yarn run lint:fix",
-    "yarn run test:staged"
+    "npm run lint:fix",
+    "npm run test:staged"
   ]
 }
