@@ -9,9 +9,9 @@
     "lint": "eslint .",
     "lint:fix": "npm lint --fix",
     "test": "jest --passWithNoTests --no-cache --runInBand",
-    "test:watch": "npm test --watch",
-    "test:coverage": "npm test --coverage",
-    "test:staged": "npm test --findRelatedTests",
+    "test:watch": "npm test -- --watch",
+    "test:coverage": "npm test -- --coverage",
+    "test:staged": "npm test -- --findRelatedTests",
     "prepare": "husky install"
   },
   "devDependencies": {
