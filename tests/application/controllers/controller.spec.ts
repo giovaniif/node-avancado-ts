@@ -3,6 +3,7 @@ import { mocked } from 'ts-jest/utils'
 import { Controller } from '@/application/controllers'
 import { ValidationComposite } from '@/application/validation'
 import { HttpResponse } from '@/application/helpers'
+import { ServerError } from '@/application/errors'
 
 jest.mock('@/application/validation/composite')
 
@@ -41,6 +42,18 @@ describe('Controller', () => {
   })
 
   it('should return 500 if perform throws', async () => {
+    const error = new Error('perform_error')
+    jest.spyOn(sut, 'perform').mockRejectedValueOnce(error)
+
+    const httpResponse = await sut.handle('any_value')
+
+    expect(httpResponse).toEqual({
+      statusCode: 500,
+      data: new ServerError(error)
+    })
+  })
+
+  it('should return same result as perform', async () => {
     const httpResponse = await sut.handle('any_value')
 
     expect(httpResponse).toEqual(sut.result)
