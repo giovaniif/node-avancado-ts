@@ -14,7 +14,7 @@ export abstract class Controller {
 
     try {
       return await this.perform(httpRequest)
-    } catch (err) {
+    } catch (err: any) {
       return serverError(err)
     }
   }
