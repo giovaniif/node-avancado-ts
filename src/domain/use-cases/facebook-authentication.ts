@@ -6,7 +6,7 @@ import { TokenGenerator } from '@/domain/contracts/crypto'
 
 type Setup = (facebookApi: LoadFacebookUserApi, userAccountRepo: LoadUserAccountRepository & SaveFacebookAccountRepository, crypto: TokenGenerator) => FacebookAuthentication
 
-export type FacebookAuthentication = (params: { token: string }) => Promise<AccessToken | AuthenticationError>
+export type FacebookAuthentication = (params: { token: string }) => Promise<{ accessToken: string }>
 
 export const setupFacebookAuthentication: Setup = (facebookApi, userAccountRepo, crypto) => {
   return async params => {
@@ -17,10 +17,11 @@ export const setupFacebookAuthentication: Setup = (facebookApi, userAccountRepo,
       const facebookAccount = new FacebookAccount(fbData, accountData)
 
       const { id } = await userAccountRepo.saveWithFacebook(facebookAccount)
-      const token = await crypto.generateToken({ key: id, expirationInMs: AccessToken.expirationInMs })
+      const accessToken = await crypto.generateToken({ key: id, expirationInMs: AccessToken.expirationInMs })
 
-      return new AccessToken(token)
+      return { accessToken }
     }
-    return new AuthenticationError()
+
+    throw new AuthenticationError()
   }
 }
