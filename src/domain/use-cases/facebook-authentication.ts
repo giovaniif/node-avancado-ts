@@ -5,7 +5,7 @@ import { LoadUserAccountRepository, SaveFacebookAccountRepository } from '@/doma
 import { AccessToken, FacebookAccount } from '@/domain/entities'
 import { TokenGenerator } from '@/domain/contracts/crypto'
 
-export class FacebookAuthenticationService implements FacebookAuthentication {
+export class FacebookAuthenticationUseCase implements FacebookAuthentication {
   constructor (
     private readonly facebookApi: LoadFacebookUserApi,
     private readonly userAccountRepo: LoadUserAccountRepository & SaveFacebookAccountRepository,
