@@ -1,0 +1,9 @@
+{
+  "type": "postgres",
+  "host": "",
+  "port": 5432,
+  "username":"",
+  "database": "",
+  "password": "",
+  "entities": ["dist/infra/postgres/entities/index.js"]
+}
