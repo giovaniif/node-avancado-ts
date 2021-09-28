@@ -1,20 +1,7 @@
 import { mock, MockProxy } from 'jest-mock-extended'
 
-export namespace TokenValidator {
-  export type Params = { token: string }
-  export type Result = string
-}
-
-interface TokenValidator {
-  validateToken: (params: TokenValidator.Params) => Promise<TokenValidator.Result>
-}
-
-type Setup = (crypto: TokenValidator) => Authorize
-type Input = { token: string }
-type Output = string
-type Authorize = (params: Input) => Promise<Output>
-
-const setupAuthorize: Setup = crypto => async params => crypto.validateToken(params)
+import { TokenValidator } from '@/domain/contracts/crypto'
+import { Authorize, setupAuthorize } from '@/domain/use-cases'
 
 describe('Authorize', () => {
   let crypto: MockProxy<TokenValidator>
