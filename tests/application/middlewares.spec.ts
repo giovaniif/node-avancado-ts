@@ -12,7 +12,11 @@ class AuthenticationMiddleware {
     const error = new RequiredStringValidator(authorization, 'authorization').validate()
     if (error !== undefined) return forbidden()
 
-    await this.authorize({ token: authorization })
+    try {
+      await this.authorize({ token: authorization })
+    } catch {
+      return forbidden()
+    }
   }
 }
 
@@ -62,5 +66,16 @@ describe('AuthenticationMiddleware', () => {
 
     expect(authorize).toHaveBeenCalledTimes(1)
     expect(authorize).toHaveBeenCalledWith({ token: authorization })
+  })
+
+  it('should retrurn 403 if authorize throws', async () => {
+    authorize.mockRejectedValueOnce(new Error())
+
+    const httpResponse = await sut.handle({ authorization })
+
+    expect(httpResponse).toEqual({
+      statusCode: 403,
+      data: new ForbiddenError()
+    })
   })
 })
