@@ -1,29 +1,5 @@
-import { forbidden, HttpResponse, ok } from '@/application/helpers'
 import { ForbiddenError } from '@/application/errors'
-import { RequiredStringValidator } from '@/application/validation'
-import { Authorize } from '@/domain/use-cases'
-
-type HttpRequest = { authorization: string }
-type Model = Error | { userId: string }
-class AuthenticationMiddleware {
-  constructor (private readonly authorize: Authorize) {}
-
-  async handle ({ authorization }: HttpRequest): Promise<HttpResponse<Model>> {
-    if (!this.validate({ authorization })) return forbidden()
-
-    try {
-      const userId = await this.authorize({ token: authorization })
-      return ok({ userId })
-    } catch {
-      return forbidden()
-    }
-  }
-
-  private validate ({ authorization }: HttpRequest): boolean {
-    const error = new RequiredStringValidator(authorization, 'authorization').validate()
-    return error === undefined
-  }
-}
+import { AuthenticationMiddleware } from '@/application/middlewares'
 
 describe('AuthenticationMiddleware', () => {
   let sut: AuthenticationMiddleware
@@ -41,7 +17,7 @@ describe('AuthenticationMiddleware', () => {
     sut = new AuthenticationMiddleware(authorize)
   })
 
-  it('should retrurn 403 if authorization is empty', async () => {
+  it('should return 403 if authorization is empty', async () => {
     const httpResponse = await sut.handle({ authorization: '' })
 
     expect(httpResponse).toEqual({
@@ -50,7 +26,7 @@ describe('AuthenticationMiddleware', () => {
     })
   })
 
-  it('should retrurn 403 if authorization is null', async () => {
+  it('should return 403 if authorization is null', async () => {
     const httpResponse = await sut.handle({ authorization: null as any })
 
     expect(httpResponse).toEqual({
@@ -59,7 +35,7 @@ describe('AuthenticationMiddleware', () => {
     })
   })
 
-  it('should retrurn 403 if authorization is undefined', async () => {
+  it('should return 403 if authorization is undefined', async () => {
     const httpResponse = await sut.handle({ authorization: undefined as any })
 
     expect(httpResponse).toEqual({
@@ -68,14 +44,14 @@ describe('AuthenticationMiddleware', () => {
     })
   })
 
-  it('should retrurn authorize with correct input', async () => {
+  it('should return authorize with correct input', async () => {
     await sut.handle({ authorization })
 
     expect(authorize).toHaveBeenCalledTimes(1)
     expect(authorize).toHaveBeenCalledWith({ token: authorization })
   })
 
-  it('should retrurn 403 if authorize throws', async () => {
+  it('should return 403 if authorize throws', async () => {
     authorize.mockRejectedValueOnce(new Error())
 
     const httpResponse = await sut.handle({ authorization })
