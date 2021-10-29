@@ -5,7 +5,8 @@
   "author": "Giovani Farias <riccog.25@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node dist/main",
+    "start": "node -r dotenv/config dist/main",
+    "dev": "ts-node-dev --respawn --transpile-only -r dotenv/config src/main",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "lint": "eslint .",
     "lint:fix": "npm run lint --fix",
@@ -39,6 +40,7 @@
     "pg-mem": "^1.9.17",
     "supertest": "^6.1.6",
     "ts-jest": "^27.0.4",
+    "ts-node-dev": "^1.1.8",
     "typescript": "^4.3.5"
   },
   "dependencies": {
