@@ -5,5 +5,5 @@ export interface UploadFile {
 
 export namespace UploadFile {
   export type Input = { file: Buffer, key: string }
-  export type Output = Promise<void>
+  export type Output = Promise<string>
 }
