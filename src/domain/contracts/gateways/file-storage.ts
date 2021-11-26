@@ -13,5 +13,5 @@ export interface DeleteFile {
 }
 
 export namespace DeleteFile {
-  export type Input = { key: string }
+  export type Input = { fileName: string }
 }
