@@ -6,6 +6,7 @@ export namespace SaveUserPicture {
   export type Input = {
     pictureUrl?: string
     initials?: string
+    id: string
   }
 
   export type Output = Promise<void>
