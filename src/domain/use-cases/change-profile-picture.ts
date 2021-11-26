@@ -1,10 +1,10 @@
-import { UploadFile, UUIDGenerator } from '@/domain/contracts/gateways'
+import { DeleteFile, UploadFile, UUIDGenerator } from '@/domain/contracts/gateways'
 import { LoadUserProfile, SaveUserPicture } from '@/domain/contracts/repos'
 import { UserProfile } from '@/domain/entities'
 
 type Input = { id: string, file?: Buffer }
 type Output = { pictureUrl?: string, initials?: string }
-type Setup = (fileStorage: UploadFile, crypto: UUIDGenerator, userProfileRepo: SaveUserPicture & LoadUserProfile) => ChangeProfilePicture
+type Setup = (fileStorage: UploadFile & DeleteFile, crypto: UUIDGenerator, userProfileRepo: SaveUserPicture & LoadUserProfile) => ChangeProfilePicture
 export type ChangeProfilePicture = (input: Input) => Promise<Output>
 
 export const setupChangeProfilePicture: Setup = (fileStorage, crypto, userProfileRepo) => async ({ file, id }) => {
@@ -20,6 +20,11 @@ export const setupChangeProfilePicture: Setup = (fileStorage, crypto, userProfil
   const userProfile = new UserProfile(id)
   userProfile.setPicture(model)
 
-  await userProfileRepo.savePicture(userProfile)
+  try {
+    await userProfileRepo.savePicture(userProfile)
+  } catch {
+    await fileStorage.delete({ key })
+  }
+
   return userProfile
 }
