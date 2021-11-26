@@ -5,6 +5,7 @@ export interface SaveUserPicture {
 export namespace SaveUserPicture {
   export type Input = {
     pictureUrl?: string
+    initials?: string
   }
 
   export type Output = Promise<void>
@@ -19,5 +20,5 @@ export namespace LoadUserProfile {
     id: string
   }
 
-  export type Result = Promise<void>
+  export type Result = { name?: string }
 }
