@@ -1,9 +1,9 @@
 import { IBackup } from 'pg-mem'
 import { getConnection, getRepository, Repository } from 'typeorm'
 
-import { PgUser } from '@/infra/postgres/entities'
-import { PgUserAccountRepository } from '@/infra/postgres/repos/user-account'
-import { makeFakeDb } from '@/tests/infra/postgres/mocks'
+import { PgUser } from '@/infra/repos/postgres/entities'
+import { PgUserAccountRepository } from '@/infra/repos/postgres/user-account'
+import { makeFakeDb } from '@/tests/infra/repos/postgres/mocks'
 
 describe('postgres user account repository', () => {
   let sut: PgUserAccountRepository
