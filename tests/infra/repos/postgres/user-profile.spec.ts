@@ -44,5 +44,12 @@ describe('postgres user profile repository', () => {
 
       expect(userProfile?.name).toBe('any_name')
     })
+
+    it('should return undefined', async () => {
+      const invalidId = '1'
+      const userProfile = await sut.load({ id: invalidId })
+
+      expect(userProfile).toBeUndefined()
+    })
   })
 })
