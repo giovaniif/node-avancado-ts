@@ -1,15 +1,20 @@
 import { getRepository } from 'typeorm'
 
-import { SaveUserPicture } from '@/domain/contracts/repos'
+import { LoadUserProfile, SaveUserPicture } from '@/domain/contracts/repos'
 import { PgUser } from '@/infra/repos/postgres/entities'
 
-type SaveInput = SaveUserPicture.Input
-type SaveOutput = SaveUserPicture.Output
-
-export class PgUserProfileRepository implements SaveUserPicture {
-  async savePicture ({ id, initials, pictureUrl }: SaveInput): Promise<SaveOutput> {
+export class PgUserProfileRepository implements SaveUserPicture, LoadUserProfile {
+  async savePicture ({ id, initials, pictureUrl }: SaveUserPicture.Input): Promise<SaveUserPicture.Output> {
     const pgUserRepo = getRepository(PgUser)
-
     await pgUserRepo.update({ id: parseInt(id) }, { pictureUrl, initials })
+  }
+
+  async load ({ id }: LoadUserProfile.Params): Promise<LoadUserProfile.Result> {
+    const pgUserRepo = getRepository(PgUser)
+    const pgUser = await pgUserRepo.findOne({ id: parseInt(id) })
+
+    if (pgUser !== undefined) {
+      return { name: pgUser.name }
+    }
   }
 }
