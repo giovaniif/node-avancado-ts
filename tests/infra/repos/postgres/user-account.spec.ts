@@ -57,7 +57,7 @@ describe('postgres user account repository', () => {
 
       const pgUser = await pgUserRepo.findOne({ id: 1 })
 
-      expect(pgUser).toEqual({ id: 1, email: 'any_email', name: 'new_name', facebookId: 'new_fb_id' })
+      expect(pgUser).toMatchObject({ id: 1, name: 'new_name', facebookId: 'new_fb_id' })
       expect(id).toBe('1')
     })
   })
