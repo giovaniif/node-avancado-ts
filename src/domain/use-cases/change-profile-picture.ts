@@ -14,7 +14,7 @@ export const setupChangeProfilePicture: Setup = (fileStorage, crypto, userProfil
   if (file !== undefined) {
     model.pictureUrl = await fileStorage.upload({ file, key })
   } else {
-    model.name = (await userProfileRepo.load({ id })).name
+    model.name = (await userProfileRepo.load({ id }))?.name
   }
 
   const userProfile = new UserProfile(id)
