@@ -11,11 +11,20 @@ class DeleteProfilePictureController {
 }
 
 describe('DeleteProfilePicture controller', () => {
-  it('should call ChangeProfilePicture with correct input', async () => {
-    const changeProfilePicture = jest.fn()
-    const sut = new DeleteProfilePictureController(changeProfilePicture)
-    const userId = 'any_user_id'
+  let sut: DeleteProfilePictureController
+  let userId: string
+  let changeProfilePicture: jest.Mock
 
+  beforeAll(() => {
+    userId = 'any_user_id'
+    changeProfilePicture = jest.fn()
+  })
+
+  beforeEach(() => {
+    sut = new DeleteProfilePictureController(changeProfilePicture)
+  })
+
+  it('should call ChangeProfilePicture with correct input', async () => {
     await sut.handle({ userId })
 
     expect(changeProfilePicture).toHaveBeenCalledWith({ id: userId })
