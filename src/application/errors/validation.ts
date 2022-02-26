@@ -1,6 +1,6 @@
 export class RequiredFieldError extends Error {
-  constructor (fieldName: string) {
-    super(`The field ${fieldName} is required`)
+  constructor (fieldName?: string) {
+    super(fieldName !== undefined ? `The field ${fieldName} is required` : 'Field is required')
     this.name = 'RequiredFieldError'
   }
 }
