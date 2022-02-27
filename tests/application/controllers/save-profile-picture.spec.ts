@@ -1,5 +1,6 @@
-import { InvalidMimeTypeError, MaxFileSizeError, RequiredFieldError } from '@/application/errors'
+import { InvalidMimeTypeError } from '@/application/errors'
 import { Controller, SavePictureController } from '@/application/controllers'
+import { AllowedMimeTypes, MaxFileSize, Required, RequiredBuffer } from '@/application/validation'
 
 describe('SavePicture controller', () => {
   let sut: SavePictureController
@@ -26,40 +27,15 @@ describe('SavePicture controller', () => {
     expect(sut).toBeInstanceOf(Controller)
   })
 
-  it('should return 400 if file is not provided', async () => {
-    const httpResponse = await sut.handle({ file: undefined, userId } as any)
+  it('should build validators correctly', async () => {
+    const validators = sut.buildValidators({ file, userId })
 
-    expect(httpResponse).toEqual({
-      statusCode: 400,
-      data: new RequiredFieldError('file')
-    })
-  })
-
-  it('should return 400 if file is not provided', async () => {
-    const httpResponse = await sut.handle({ file: null, userId } as any)
-
-    expect(httpResponse).toEqual({
-      statusCode: 400,
-      data: new RequiredFieldError('file')
-    })
-  })
-
-  it('should return 400 if file is empty', async () => {
-    const httpResponse = await sut.handle({ file: { buffer: Buffer.from(''), mimeType }, userId })
-
-    expect(httpResponse).toEqual({
-      statusCode: 400,
-      data: new RequiredFieldError('file')
-    })
-  })
-
-  it('should not return 400 if mimetype is valid', async () => {
-    const httpResponse = await sut.handle({ file: { buffer, mimeType: 'image/png' }, userId })
-
-    expect(httpResponse).not.toEqual({
-      statusCode: 400,
-      data: new InvalidMimeTypeError(['png', 'jpg'])
-    })
+    expect(validators).toEqual([
+      new Required(file, 'file'),
+      new RequiredBuffer(buffer, 'file'),
+      new AllowedMimeTypes(['png', 'jpg'], mimeType),
+      new MaxFileSize(5, buffer)
+    ])
   })
 
   it('should not return 400 if mimetype is valid', async () => {
@@ -77,16 +53,6 @@ describe('SavePicture controller', () => {
     expect(httpResponse).not.toEqual({
       statusCode: 400,
       data: new InvalidMimeTypeError(['png', 'jpg'])
-    })
-  })
-
-  it('should return 400 if if filesize is bigger than 5MB', async () => {
-    const invalidBuffer = Buffer.from(new ArrayBuffer(6 * 1024 * 1021))
-    const httpResponse = await sut.handle({ file: { buffer: invalidBuffer, mimeType }, userId })
-
-    expect(httpResponse).toEqual({
-      statusCode: 400,
-      data: new MaxFileSizeError(5)
     })
   })
 
