@@ -88,7 +88,7 @@ describe('AwsS3FileStorage', () => {
     beforeAll(() => {
       deleteObjectPromiseSpy = jest.fn()
       deleteObjectSpy = jest.fn().mockImplementation(() => ({ promise: deleteObjectPromiseSpy }))
-      mocked(S3).mockImplementation(jest.fn().mockImplementation(() => ({ putObject: deleteObjectSpy })))
+      mocked(S3).mockImplementation(jest.fn().mockImplementation(() => ({ deleteObject: deleteObjectSpy })))
     })
 
     it('should call deleteObject with correct input', async () => {
