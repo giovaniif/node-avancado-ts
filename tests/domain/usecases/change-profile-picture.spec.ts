@@ -14,7 +14,9 @@ describe('ChangeProfilePicture', () => {
   let userProfileRepo: MockProxy<SaveUserPicture & LoadUserProfile>
   let crypto: MockProxy<UUIDGenerator>
   let sut: ChangeProfilePicture
-  let file: Buffer
+  let buffer: Buffer
+  let mimeType: string
+  let file: { buffer: Buffer, mimeType: string }
 
   beforeAll(() => {
     uuid = 'any_unique_id'
@@ -24,7 +26,9 @@ describe('ChangeProfilePicture', () => {
     crypto.uuid.mockReturnValue(uuid)
     userProfileRepo = mock()
     userProfileRepo.load.mockResolvedValue({ name: 'Giovani Ricco Farias' })
-    file = Buffer.from('any_buffer')
+    buffer = Buffer.from('any_buffer')
+    mimeType = 'image/png'
+    file = { buffer, mimeType }
   })
 
   beforeEach(() => {
@@ -34,7 +38,7 @@ describe('ChangeProfilePicture', () => {
   it('should call UploadFile with correct input', async () => {
     await sut({ id: 'any_id', file })
 
-    expect(fileStorage.upload).toHaveBeenCalledWith({ file, key: uuid })
+    expect(fileStorage.upload).toHaveBeenCalledWith({ file: file.buffer, fileName: uuid })
     expect(fileStorage.upload).toHaveBeenCalledTimes(1)
   })
 
@@ -96,7 +100,7 @@ describe('ChangeProfilePicture', () => {
     const promise = sut({ id: 'any_id', file })
 
     promise.catch(() => {
-      expect(fileStorage.delete).toHaveBeenCalledWith({ key: uuid })
+      expect(fileStorage.delete).toHaveBeenCalledWith({ fileName: uuid })
       expect(fileStorage.delete).toHaveBeenCalledTimes(1)
     })
   })
