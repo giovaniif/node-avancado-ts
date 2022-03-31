@@ -27,7 +27,7 @@ describe('SavePicture controller', () => {
     expect(sut).toBeInstanceOf(Controller)
   })
 
-  it('should build validators correctly', async () => {
+  it('should build validators correctly on save', async () => {
     const validators = sut.buildValidators({ file, userId })
 
     expect(validators).toEqual([
@@ -36,6 +36,12 @@ describe('SavePicture controller', () => {
       new AllowedMimeTypes(['png', 'jpg'], mimeType),
       new MaxFileSize(5, buffer)
     ])
+  })
+
+  it('should build validators correctly on delete', async () => {
+    const validators = sut.buildValidators({ file: undefined, userId })
+
+    expect(validators).toEqual([])
   })
 
   it('should not return 400 if mimetype is valid', async () => {
